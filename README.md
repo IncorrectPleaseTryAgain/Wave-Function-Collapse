@@ -1,4 +1,4 @@
-# Wave-Function-Collapse
+# Wave-Function-Collapse Mark-2
 Fundamental Wave Function Collapse Algorithm
 
 https://github.com/IncorrectPleaseTryAgain/Wave-Function-Collapse/assets/99939034/2c243b20-e6da-436a-8059-579f02374201
@@ -20,9 +20,9 @@ https://github.com/IncorrectPleaseTryAgain/Wave-Function-Collapse/assets/9993903
 This projects is an implementation for the basic strucure of the [Wave Function Collapse Algorithm](https://github.com/mxgmn/WaveFunctionCollapse). Some key elements of the algorithm has not been implemented into this itteration of the project. [3]
 
 These elements include:
-1. Recurselvely propogating the entropy for each cell.
-2. Matching the cell socket with every other tile socket in every rotation/configuration.
-3. Given a sample image, determining the neccesary tiles and their respected sockets.
+- [x] Matching the cell socket with every other tile socket in every rotation/configuration.
+- [ ] Recurselvely propogating the entropy for each cell.
+- [ ] Given a sample image, determining the neccesary tiles and their respected sockets.
 
 ----
 
