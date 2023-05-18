@@ -1,6 +1,6 @@
 /*  Michael Steenkamp
 *   11/05/2023
-*   Wave Function Collapse MK.1
+*   Wave Function Collapse MK.2
 *
 *   Language: 
 *           JavaScript
@@ -10,7 +10,7 @@
 *           https://www.youtube.com/watch?v=rI_y2GAlQFM&t=2023s
 *           https://www.boristhebrave.com/2020/04/13/wave-function-collapse-explained/
 *   Description:
-*              This program is the first edition of my implementation
+*              This program is the Second edition of my implementation
 *              of the pattern generation algorithm - Wave Function Collapse
 */
 
@@ -34,7 +34,7 @@
 // • Each tile image should be named 0,1,2,...
 // • Path (PATH) name should be changed inside function preload.
 // • Extention (EXT) name should be changed inside function preload.
-// • Number of images (COUNT) should be changed inside function preload.
+// • Number of images (NUM_IMG) should be changed inside function preload.
 
 /* EDGES */
 // • Each tile edge should be inserted as a 2D-Array [tile][edge].
@@ -46,26 +46,25 @@
 /* GLOBAL VARIABLES */
 let canvasWidth = {};
 let canvasHeight = {};
-const DIM = 50;
+const DIM = 10;
 
+let tileImages = [];
 let tiles = [];
 
 const EDGES = [
   ["AAA", "AAA", "AAA", "AAA"],
   ["ABA", "ABA", "AAA", "ABA"],
-  ["ABA", "ABA", "ABA", "AAA"],
-  ["AAA", "ABA", "ABA", "ABA"],
-  ["ABA", "AAA", "ABA", "ABA"],
 ]
 
 function preload() {
+  /* SETUP VARIABLES */
   const PATH = "images/";
   const EXT = ".png";
-  const COUNT = 5;
+  const NUM_IMG = 2;
 
-  for (let i = 0; i < COUNT; i++) {
-    let img = loadImage(`${PATH}${i}${EXT}`);
-    tiles[i] = new Tile(img, EDGES[i]);
+  for (let i = 0; i < NUM_IMG; i++) {
+
+    tileImages[i] = loadImage(`${PATH}${i}${EXT}`);
   }
 }
 
@@ -87,6 +86,7 @@ function setup() {
 
   this.grid = [];
 
+  initializeTiles();
   initializeGrid();
 }
 
@@ -103,6 +103,57 @@ function mouseClicked() {
   getNextGeneration();
 
   drawGrid();
+}
+
+function initializeTiles() {
+
+  let tileIndx = 0;
+
+  for (let i = 0; i < tileImages.length; i++) {
+
+    tiles[tileIndx] = new Tile(tileImages[i], EDGES[i]);
+
+    addRotationVarients();
+
+    tileIndx++;
+
+  }
+
+  function addRotationVarients() {
+
+    const ORIGINAL_TILE = tiles[tileIndx];;
+    let newEdges = {};
+    let newImg = {};
+
+    for (let numRotate = 1; numRotate < 4; numRotate++) {
+
+      newEdges = ORIGINAL_TILE.getEdgeRotate(numRotate);
+
+      if (!arrayEqual(ORIGINAL_TILE.EDGES, newEdges)) {
+
+        newImg = ORIGINAL_TILE.getImageRotate(numRotate);
+
+        tileIndx++;
+        tiles[tileIndx] = new Tile(newImg, newEdges);
+
+      }
+    }
+  }
+
+  function arrayEqual(arr1, arr2) {
+
+    if (arr1.length != arr2.length) {
+      return false;
+    }
+
+    for (let n = 0; n < arr1.length; n++) {
+      if (arr1[n] != arr2[n]) {
+        return false;
+      }
+    }
+
+    return true;
+  }
 }
 
 function initializeGrid() {
@@ -130,7 +181,7 @@ function drawGrid() {
       if (CELL.isCollapsed) {
 
         try {
-          image(tiles[CELL.options[0]].img, c * W, r * H, W, H);
+          image(tiles[CELL.options[0]].IMG, c * W, r * H, W, H);
         }
         catch (ERR) {
           console.log(ERR);
@@ -149,7 +200,6 @@ function drawGrid() {
     }
   }
 }
-
 
 function getNextGeneration() {
   let gridCopy = this.grid.slice(0);
@@ -180,6 +230,7 @@ function getNextGeneration() {
       //propogate
       propogateEntropy(CELL);
     }
+
   } else {
     noLoop();
     console.log("DONE");
@@ -200,8 +251,8 @@ function propogateEntropy(CELL) {
 
       for (let option of CELL_N.options) {
 
-        const CELL_SOCKET = EDGES[CELL.options[0]][0];
-        const CELL_N_SOCKET = EDGES[option][2];
+        const CELL_SOCKET = tiles[CELL.options[0]].EDGES[0];
+        const CELL_N_SOCKET = tiles[option].EDGES[2];
 
         if (reverseSocket(CELL_N_SOCKET) == CELL_SOCKET) {
           newOptions.push(option);
@@ -214,8 +265,6 @@ function propogateEntropy(CELL) {
       //   CELL_N.isCollapsed = true;
       // }
     }
-
-    // console.log(CELL_N);
   }
 
   //East
@@ -230,8 +279,8 @@ function propogateEntropy(CELL) {
       for (let option of CELL_E.options) {
 
         // Comparing CELL right socket with CELL E right socket
-        const CELL_SOCKET = EDGES[CELL.options[0]][1];
-        const CELL_E_SOCKET = EDGES[option][3];
+        const CELL_SOCKET = tiles[CELL.options[0]].EDGES[1];
+        const CELL_E_SOCKET = tiles[option].EDGES[3];
 
         if (reverseSocket(CELL_E_SOCKET) == CELL_SOCKET) {
           newOptions.push(option);
@@ -244,7 +293,6 @@ function propogateEntropy(CELL) {
       //   CELL_E.isCollapsed = true;
       // }
     }
-    // console.log(CELL_E);
   }
 
   //South
@@ -258,8 +306,8 @@ function propogateEntropy(CELL) {
 
       for (let option of CELL_S.options) {
 
-        const CELL_SOCKET = EDGES[CELL.options[0]][2];
-        const CELL_S_SOCKET = EDGES[option][0];
+        const CELL_SOCKET = tiles[CELL.options[0]].EDGES[2];
+        const CELL_S_SOCKET = tiles[option].EDGES[0];
 
         if (reverseSocket(CELL_S_SOCKET) == CELL_SOCKET) {
           newOptions.push(option);
@@ -272,8 +320,6 @@ function propogateEntropy(CELL) {
       //   CELL_S.isCollapsed = true;
       // }
     }
-
-    // console.log(CELL_S);
   }
 
   //West
@@ -287,8 +333,8 @@ function propogateEntropy(CELL) {
 
       for (let option of CELL_W.options) {
 
-        const CELL_SOCKET = EDGES[CELL.options[0]][3];
-        const CELL_W_SOCKET = EDGES[option][1];
+        const CELL_SOCKET = tiles[CELL.options[0]].EDGES[3];
+        const CELL_W_SOCKET = tiles[option].EDGES[1];
 
         if (reverseSocket(CELL_W_SOCKET) == CELL_SOCKET) {
           newOptions.push(option);
@@ -301,8 +347,6 @@ function propogateEntropy(CELL) {
       //   CELL_W.isCollapsed = true;
       // }
     }
-
-    // console.log(CELL_W);
   }
 
 
