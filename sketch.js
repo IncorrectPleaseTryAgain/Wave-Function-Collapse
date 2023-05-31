@@ -1,6 +1,6 @@
 /*  Michael Steenkamp
 *   11/05/2023
-*   Wave Function Collapse MK.2
+*   Wave Function Collapse | Simple
 *
 *   Language: 
 *           JavaScript
