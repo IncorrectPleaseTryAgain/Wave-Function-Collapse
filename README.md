@@ -1,10 +1,8 @@
 # Wave-Function-Collapse Mark-2
 Fundamental Wave Function Collapse Algorithm
 
-https://github.com/IncorrectPleaseTryAgain/Wave-Function-Collapse/assets/99939034/2c243b20-e6da-436a-8059-579f02374201
-
-https://github.com/IncorrectPleaseTryAgain/Wave-Function-Collapse/assets/99939034/7d4784dd-8f97-4c07-9d38-91e86f4d27a5
-
+![image](https://github.com/IncorrectPleaseTryAgain/Wave-Function-Collapse-Simple/assets/99939034/635bf79d-7f98-48a1-bb20-56f8e121c7c9)
+# <a href="https://youtu.be/FL11g2pa-QE">Preview Video</a>
 ----
 
 ## TILES
